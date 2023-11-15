@@ -11,7 +11,7 @@ import requests
 import jjson
 
 APP_NAME = "IP Bot"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 AUTHOR = "Que's C++ Studio"
 
 CONF_KEY_TEST = "test"

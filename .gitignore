@@ -1,0 +1,17 @@
+*.vim
+*.log
+*.html
+*.htm
+*.xls
+*.zip
+*.asp
+__pycache__/
+downloads/
+backup/
+logs/
+tags
+tmp/
+build/
+*.code-workspace
+*.lnk
+last_ip.txt

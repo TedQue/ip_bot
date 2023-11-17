@@ -3,6 +3,7 @@ import sys
 import re
 import argparse
 import smtplib
+import random
 
 # 第三方库
 import requests
@@ -11,10 +12,11 @@ import requests
 import jjson
 
 APP_NAME = "IP Bot"
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 AUTHOR = "Que's C++ Studio"
 
 CONF_KEY_TEST = "test"
+CONF_KEY_SHUFFLE = "shuffle"
 CONF_KEY_URLS = "urls"
 CONF_KEY_SAVE_LAST_IP= "save_last_ip"
 
@@ -43,10 +45,16 @@ def brief(s, max_len):
 
 def get_ip_address(conf, test):
 	headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84"}
+	urls = conf.get(CONF_KEY_URLS, [])
+
+	# 打乱 url 列表,避免每次都从同一个数据源开始
+	if conf.get(CONF_KEY_SHUFFLE, True):
+		random.seed()
+		urls = random.sample(urls, k=len(urls))
 
 	# 依次访问指定网页尝试获取 IP 地址
 	# 如果是测试模式,则会尝试所有配置选项,非测试模式则在第一个成功尝试后立即返回
-	for i in conf.get(CONF_KEY_URLS, []):
+	for i in urls:
 		# url 选项必须至少包含页面地址和正则串两项
 		assert isinstance(i, list) and len(i) >= 2
 		url, pat = i[0], i[1]

@@ -12,13 +12,13 @@ import requests
 import jjson
 
 APP_NAME = "IP Bot"
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 AUTHOR = "Que's C++ Studio"
 
 CONF_KEY_TEST = "test"
 CONF_KEY_SHUFFLE = "shuffle"
 CONF_KEY_URLS = "urls"
-CONF_KEY_SAVE_LAST_IP= "save_last_ip"
+CONF_KEY_SAVE_LAST_IP = "save_last_ip"
 
 CONF_KEY_SMTP_SSL = "smtp_ssl"
 CONF_KEY_SMTP_HOST = "smtp_host"
@@ -44,7 +44,11 @@ def brief(s, max_len):
 	return s if len(s) <= max_len else s[: max_len // 2] + ' .. ' + s[-max_len // 2:]
 
 def get_ip_address(conf, test):
-	headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84"}
+	headers = {
+		"User-Agent":
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"
+			" Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0"
+	}
 	urls = conf.get(CONF_KEY_URLS, [])
 
 	# 打乱 url 列表,避免每次都从同一个数据源开始
@@ -116,8 +120,14 @@ def send_mail(conf, ip):
 	mail_to = conf.get(CONF_KEY_SMTP_MAIL_TO, "")
 	assert mail_from, f"mail from address can't be empty"
 	assert mail_to, f"mail to address can't be empty"
-	mail_subject = conf.get(CONF_KEY_SMTP_MAIL_SUBJECT, f"Your IP Address: {TOKEN_IP}").replace(TOKEN_IP, ip)
-	mail_content = conf.get(CONF_KEY_SMTP_MAIL_CONTENT, f"Hello,\r\nYour IP address is: {TOKEN_IP}\r\n\r\n{APP_NAME} v{VERSION} by {AUTHOR}").replace(TOKEN_IP, ip)
+	mail_subject = conf.get(
+		CONF_KEY_SMTP_MAIL_SUBJECT,
+		f"Your IP Address: {TOKEN_IP}"
+	).replace(TOKEN_IP, ip)
+	mail_content = conf.get(
+		CONF_KEY_SMTP_MAIL_CONTENT,
+		f"Hello,\r\nYour IP address is: {TOKEN_IP}\r\n\r\n{APP_NAME} v{VERSION} by {AUTHOR}"
+	).replace(TOKEN_IP, ip)
 	msg = f"From: {mail_from}\r\nTo: {mail_to}\r\nSubject: {mail_subject}\r\n\r\n{mail_content}"
 
 	try:
@@ -141,7 +151,7 @@ def get_last_ip(conf):
 		try:
 			with open(fn, "r", encoding="utf-8") as fp:
 				return fp.read()
-		except:
+		except Exception:
 			pass
 	return ""
 
@@ -187,6 +197,7 @@ def main():
 					print(f"IP address remains unchanged: \"{ip}\"")
 
 	print(f"Bye")
+
 
 # entrance
 if __name__ == "__main__":
